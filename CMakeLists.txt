@@ -5,7 +5,7 @@ project(rslidar_sdk)
 #=======================================
 # Custom Point Type (XYZI,XYZIRT, XYZIF, XYZIRTF)
 #=======================================
-set(POINT_TYPE XYZI)
+set(POINT_TYPE XYZIRTF)
 
 option(ENABLE_TRANSFORM "Enable transform functions" OFF)
 if (${ENABLE_TRANSFORM})
