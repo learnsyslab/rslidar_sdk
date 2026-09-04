@@ -10,12 +10,23 @@ lidar:
       lidar_type: RSM1             #  LiDAR type - RS16, RS32, RSBP, RSAIRY, RSHELIOS, RSHELIOS_16P, RS128, RS80, RS48, RSP128, RSP80, RSP48, 
                                    #               RSM1, RSM1_JUMBO, RSM2, RSM3, RSE1, RSMX.
                                    
+      # NOTE: these three ports must match what the LiDAR is actually configured to
+      # transmit on. Read them from the device: http://<lidar-ip>/setting_data.json
+      # (fields MPort / DPort / IPort). A mismatch means the driver simply receives
+      # nothing, with no error beyond a periodic MSOP timeout.
       msop_port: 6699              #  Msop port of lidar
       difop_port: 7788             #  Difop port of lidar
       imu_port: 0                  #  IMU port of lidar(only for RSAIRY, RSE1), 0 means no imu.
                                    #  If you want to use IMU, please first set ENABLE_IMU_DATA_PARSE to ON in CMakeLists.txt 
       user_layer_bytes: 0          #  Bytes of user layer. thers is no user layer if it is 0         
       tail_layer_bytes: 0          #  Bytes of tail layer. thers is no tail layer if it is 0
+      socket_recv_buf: 4194304     #  Bytes of the UDP receive buffer. The rs_driver default (106496)
+                                   #  is SMALLER than the usual OS default and leaves only ~40 ms of
+                                   #  headroom at the RSAIRY's 2240 pkt/s, so a brief scheduling stall
+                                   #  drops a burst of consecutive MSOP packets. That shows up as a
+                                   #  contiguous wedge of missing azimuths (~1.6 deg per lost packet),
+                                   #  not as scattered dropouts. Also raise net.core.rmem_max, or the
+                                   #  kernel silently clamps this value.
 
 
       min_distance: 0.2            #  Minimum distance of point cloud

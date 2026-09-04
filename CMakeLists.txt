@@ -149,6 +149,15 @@ install(TARGETS
         rslidar_sdk_node
         DESTINATION lib/${PROJECT_NAME})
 
+# Both rslidar_sdk_node and rslidar_component link the rslidar_sdk shared
+# library, so it has to be installed too. Without this the node builds fine
+# but aborts at startup with:
+#   error while loading shared libraries: librslidar_sdk.so
+install(TARGETS ${PROJECT_NAME}
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
+
 add_library(rslidar_component SHARED src/manager/rslidar_component.cpp)
 target_link_libraries(rslidar_component
         ${PROJECT_NAME}
