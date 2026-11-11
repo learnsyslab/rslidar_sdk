@@ -39,6 +39,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 
 #include "source/source.hpp"
+#include <atomic>
+#include <thread>
 #include <rs_driver/api/lidar_driver.hpp>
 #include <rs_driver/utility/sync_queue.hpp>
 
@@ -73,7 +75,7 @@ protected:
   std::thread imu_data_process_thread_;
 #endif
   std::thread point_cloud_process_thread_;
-  bool to_exit_process_;
+  std::atomic<bool> to_exit_process_;
 };
 
 } // namespace robosense::lidar
